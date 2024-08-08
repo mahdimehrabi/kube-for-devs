@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:
+    timeserver
+spec:
+  selector:
+    matchLabels:
+      pod: timeserver-pod
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        pod: timeserver-pod
+    spec:
+      containers:
+        - image: timeserver:latest
+          name: timeserver-container
+          imagePullPolicy: Never
