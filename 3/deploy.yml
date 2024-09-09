@@ -1,19 +1,49 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:
-    timeserver
+  name: timeserver
 spec:
+  replicas: 3
   selector:
     matchLabels:
       pod: timeserver-pod
-  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 2
   template:
     metadata:
       labels:
         pod: timeserver-pod
     spec:
       containers:
-        - image: timeserver:latest
-          name: timeserver-container
-          imagePullPolicy: Never
+        - name: timeserver-container
+          image: docker.io/library/timeserver:vx4
+          livenessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            httpGet:
+              path: / 
+              port: 8000
+              scheme: HTTP
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 30
+            httpGet:
+              path: / 
+              port: 8000
+              scheme: HTTP
+            timeoutSeconds: 5
+            failureThreshold: 1
+            successThreshold: 2
+          resources:
+            requests:
+              cpu: 20m 
+              memory: 50Mi 
+            limits:
+              cpu: 200m
+              memory: 300Mi
