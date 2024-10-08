@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: timeserver-ingress
+spec:
+  rules:
+    - host: hello-world.example
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: timeserver-service
+                port:
+                  number: 8000
+          - path: /robohash
+            pathType: Prefix
+            backend:
+              service:
+                name: robohash-internal
+                port:
+                  number: 80
+

@@ -1,0 +1,9 @@
+apiVersion: scheduling.k8s.io/v1
+kind: priorityClass
+metadata: 
+  name: placeholder-priority
+value: -10 
+preemptionPolicy: Never
+globalDefault: false
+description: "Placeholder Pod priority" 
+
