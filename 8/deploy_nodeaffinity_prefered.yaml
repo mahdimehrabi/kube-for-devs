@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeserver
+spec: 
+  replicas: 6
+  selector:
+    matchLabels:
+      pod: timeserver-pod
+  template:
+    metadta:
+      labels:
+        pod: timeserver-pod
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/arch
+                    operator: In
+                    values:
+                      - arm64
+      containers:
+        - name: timeserver-container
+          image: timeserver:xv6
+          resources:
+            requests:
+              cpu: 500m
